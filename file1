@@ -1,0 +1,45 @@
+# Carbon Footprint Estimation Tool using Synthetic Data
+
+import pandas as pd
+import numpy as np
+
+# Set random seed
+np.random.seed(42)
+
+# Number of synthetic records
+n = 100
+
+# Generate synthetic lifestyle data
+data = {
+    "electricity_kwh_per_month": np.random.randint(100, 800, n),
+    "car_km_per_month": np.random.randint(0, 1500, n),
+    "flights_per_year": np.random.randint(0, 10, n),
+    "waste_kg_per_week": np.random.randint(1, 20, n),
+    "meat_meals_per_week": np.random.randint(0, 14, n)
+}
+
+df = pd.DataFrame(data)
+
+# Emission factors (approximate values)
+electricity_factor = 0.0007   # tons CO2 per kWh
+car_factor = 0.00021         # tons CO2 per km
+flight_factor = 0.15         # tons CO2 per flight
+waste_factor = 0.001         # tons CO2 per kg waste
+meat_factor = 0.002          # tons CO2 per meat meal
+
+# Estimate annual carbon footprint
+df["carbon_footprint_tons_per_year"] = (
+    df["electricity_kwh_per_month"] * 12 * electricity_factor +
+    df["car_km_per_month"] * 12 * car_factor +
+    df["flights_per_year"] * flight_factor +
+    df["waste_kg_per_week"] * 52 * waste_factor +
+    df["meat_meals_per_week"] * 52 * meat_factor
+)
+
+# Show sample results
+print(df.head())
+
+# Save dataset to Excel
+df.to_excel("carbon_footprint_synthetic_data.xlsx", index=False)
+
+print("Synthetic carbon footprint dataset exported to Excel.")
